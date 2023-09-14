@@ -9,10 +9,6 @@ local action_state = require("telescope.actions.state")
 local M = {}
 
 -- Git Actions
---   NeoTree:
---      - Add file
---      - Unstage file
---      - Diff file
 --   Buffer:
 --      - Add Chunk
 --      - Diff Chunk
@@ -23,43 +19,6 @@ local M = {}
 --    - Find References
 --    - Go to Definition
 --    - 
-M.config = {
-    title = "Context Menu",
-    settings = {
-        -- TODO: full path on copy path or relative to CWD
-    },
-    items = {
-        {
-            "Git Add File",
-            function ()
-                return true
-            end,
-            function ()
-                vim.api.nvim_echo({{"test"}}, false, {})
-            end,
-        },
-        {
-            "Git Unstage File",
-            false,
-            function ()
-            end
-        },
-        {
-            "Neotree: Copy Path",
-            function ()
-                return true
-            end,
-            function ()
-                local state = require("neo-tree.sources.manager").get_state_for_window()
-                local node = state.tree:get_node()
-                local abs_path = node.path
-                vim.fn.setreg('+', abs_path)
-            end
-        },
-    },
-
-    picker = require("telescope.themes").get_dropdown({layout_config={width=0.3}})
-}
 
 
 -- ???
@@ -70,7 +29,7 @@ local function entry_maker(entry)
     -- Each menu item gets to decide if it is valid
     -- via a callback function. This can be overridden
     -- by using false instead of a function.
-    local valid = entry[2]
+    local valid = entry.enable
     if type(valid) == "function" then
         valid = valid()
     end
@@ -78,10 +37,10 @@ local function entry_maker(entry)
     -- This is what telescope needs
     return {
         value   = entry,
-        display = entry[1],  -- string that gets displayed by Telescope
-        ordinal = entry[1],  -- how Telescope sorts entries
-        valid   = valid,     -- true to show, false to hide
-        action  = entry[3],  -- a function to call when selected
+        display = entry.display,  -- string that gets displayed by Telescope
+        ordinal = entry.display,  -- how Telescope sorts entries
+        valid   = valid,          -- true to show, false to hide
+        action  = entry.action,   -- a function to call when selected
     }
 end
 
@@ -91,16 +50,28 @@ end
 --
 function M.setup(opts)
 
+    -- Get default config
+    local defaultConfig = require('context-menu.config')
+    defaultConfig = vim.tbl_deep_extend('force', require('context-menu.items.neotree'), defaultConfig)
+
     -- Combine the default configuration with the options passed
     -- via the plugin manager. Use the passed in options if
     -- there is a conflict so we can override configuration.
-    opts = vim.tbl_deep_extend('force', M.config, opts)
+    opts = vim.tbl_deep_extend('force', defaultConfig, opts)
 
     -- vim.api.nvim_echo({{vim.inspect(opts)}}, true, {})
 
+    -- Built items list
+    local items = {}
+    local i = 0
+    for _,v in pairs(opts.items) do
+        i = i + 1
+        items[i] = v
+    end
+
     -- Define the static finder
     local finder = finders.new_table({
-        results = opts.items,
+        results = items,
         entry_maker = entry_maker
     })
 
