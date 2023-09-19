@@ -8,6 +8,4 @@ return {
     --     ['neotree-git-add'] = {enable = false}
     -- },
 
-
-    picker = require("telescope.themes").get_dropdown({layout_config={width=0.3}})
 }

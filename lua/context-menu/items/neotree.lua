@@ -29,32 +29,36 @@ local function GitUnstage()
 end
 
 
+-- ???
+local function CheckEnable(opts)
+
+    -- Neotree menu items are disabled if
+    -- we are not in a neotree buffer.
+    return "neo-tree" == opts.buf_filetype
+end
+
 -- ??
 return {
     items = {
 
         -- ???
-        ['neotree-git-add'] = {
-            display = "Neotree: Git Add File",
-            enable = function ()
-                return true
-            end,
+        ['neotree-git-stage'] = {
+            display = "Git Stage File",
+            enable = CheckEnable,
             action = GitAdd,
         },
 
         -- ???
         ['neotree-git-unstage'] = {
-            display = "Neotree: Git Unstage File",
-            enable = true,
+            display = "Git Unstage File",
+            enable = CheckEnable,
             action = GitUnstage,
         },
 
         -- ???
         ['neotree-copy-path'] = {
-            display = "Neotree: Copy Path",
-            enable = function ()
-                return true
-            end,
+            display = "Copy Path",
+            enable = CheckEnable,
             action = CopyPath,
         },
     },
