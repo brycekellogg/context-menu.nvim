@@ -53,7 +53,8 @@ return {
             display = "Open in vertical split",
             enable = CheckEnable,
             action = function ()
-
+                local state = require("neo-tree.sources.manager").get_state_for_window()
+                require("neo-tree.sources.common.commands").open_vsplit(state)
             end,
         },
 
@@ -62,7 +63,8 @@ return {
             display = "Open in horizontal split",
             enable = CheckEnable,
             action = function ()
-
+                local state = require("neo-tree.sources.manager").get_state_for_window()
+                require("neo-tree.sources.common.commands").open_split(state)
             end,
         },
 
@@ -71,7 +73,8 @@ return {
             display = "Toggle hidden",
             enable = CheckEnable,
             action = function ()
-
+                local state = require("neo-tree.sources.manager").get_state_for_window()
+                require("neo-tree.sources.filesystem.commands").toggle_hidden(state)
             end,
         },
 
