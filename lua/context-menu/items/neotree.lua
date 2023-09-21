@@ -1,32 +1,7 @@
 --   NeoTree:
---      - Add file
---      - Unstage file
 --      - Diff file
 
 
--- ???
---
-local function CopyPath()
-    local state = require("neo-tree.sources.manager").get_state_for_window()
-    local path = state.tree:get_node().path
-    vim.fn.setreg('+', path)
-end
-
-
--- ??
---
-local function GitAdd()
-    local state = require("neo-tree.sources.manager").get_state_for_window()
-    require("neo-tree.sources.common.commands").git_add_file(state)
-end
-
-
--- ??
---
-local function GitUnstage()
-    local state = require("neo-tree.sources.manager").get_state_for_window()
-    require("neo-tree.sources.common.commands").git_unstage_file(state)
-end
 
 
 -- ???
@@ -37,6 +12,7 @@ local function CheckEnable(opts)
     return "neo-tree" == opts.buf_filetype
 end
 
+
 -- ??
 return {
     items = {
@@ -45,21 +21,64 @@ return {
         ['neotree-git-stage'] = {
             display = "Git Stage File",
             enable = CheckEnable,
-            action = GitAdd,
+            action = function()
+                local state = require("neo-tree.sources.manager").get_state_for_window()
+                require("neo-tree.sources.common.commands").git_add_file(state)
+            end,
         },
 
         -- ???
         ['neotree-git-unstage'] = {
             display = "Git Unstage File",
             enable = CheckEnable,
-            action = GitUnstage,
+            action = function()
+                local state = require("neo-tree.sources.manager").get_state_for_window()
+                require("neo-tree.sources.common.commands").git_unstage_file(state)
+            end,
         },
 
         -- ???
         ['neotree-copy-path'] = {
             display = "Copy Path",
             enable = CheckEnable,
-            action = CopyPath,
+            action = function()
+                local state = require("neo-tree.sources.manager").get_state_for_window()
+                local path = state.tree:get_node().path
+                vim.fn.setreg('+', path)
+            end
         },
+
+        -- TODO
+        ['neotree-open-vert'] = {
+            display = "Open in vertical split",
+            enable = CheckEnable,
+            action = function ()
+
+            end,
+        },
+
+        -- TODO
+        ['neotree-open-horiz'] = {
+            display = "Open in horizontal split",
+            enable = CheckEnable,
+            action = function ()
+
+            end,
+        },
+
+        -- TODO
+        ['neotree-toggle-hidden'] = {
+            display = "Toggle hidden",
+            enable = CheckEnable,
+            action = function ()
+
+            end,
+        },
+
+        -- TODO
+        -- Somehow add to diff?
+        -- ['neotree-diff'] = {
+        --
+        -- }
     },
 }

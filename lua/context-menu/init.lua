@@ -67,12 +67,21 @@ function M.menu(opts)
 
 
     -- Built items list
+    -- Telescope uses order of this,
+    -- need to sort based on something
     local items = {}
     local i = 0
     for _,v in pairs(M.config.items) do
         i = i + 1
         items[i] = v
     end
+
+    -- why do we do sort?
+    table.sort(items, function (a, b)
+        return a.display < b.display
+    end)
+
+    -- vim.api.nvim_echo({{vim.inspect(items)}}, true, {})
 
     -- Define the static finder
     local finder = finders.new_table({
@@ -102,7 +111,7 @@ function M.menu(opts)
         prompt_title = M.config.title,
         finder = finder,
         cache_picker = false,  -- no caching because of how we enable items
-        sorter = conf.generic_sorter(opts.picker),
+        sorter = conf.generic_sorter(M.config),
         attach_mappings = function(prompt_bufnr, map)
             actions.select_default:replace(function()
                 actions.close(prompt_bufnr)

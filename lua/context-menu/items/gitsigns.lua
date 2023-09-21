@@ -3,7 +3,7 @@ return {
         -- ???
         ['gitsigns-git-add'] = {
             display = "Gitsigns: Git Add File",
-            enable = true,
+            enable = false,
             action = nil,
         },
     }
